@@ -1,5 +1,7 @@
 <template>
   <div class="login_container">
+    <!-- 登录弹框提示 -->
+
     <div class="login_box">
       <!-- 头像 -->
       <div class="avatar_box">
@@ -25,6 +27,7 @@
       </el-form>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -34,8 +37,8 @@ export default {
     return {
       // 登录数据表单的数据绑定
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       // 表单验证规则
       rules: {
@@ -56,10 +59,18 @@ export default {
       this.$refs.loginFormRef.resetFields()
     },
     login () {
-      this.$refs.loginFormRef.validate((valid) => {
-        console.log(valid)
+      this.$refs.loginFormRef.validate(async valid => {
+        if (!valid) return
+        const result = await this.$http.post('login', this.loginForm)
+        const { data: res } = result
+        if (res.meta.status !== 200) return this.$message.error('登录失败,请检查输入是否正确')
+        this.$message.success('登录成功,正在跳转...')
+        console.log(res)
+        window.sessionStorage.setItem('token', res.data.token)
+        this.$router.push('/home')
       })
     }
+
   }
 }
 </script>
