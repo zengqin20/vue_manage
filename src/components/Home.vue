@@ -1,6 +1,6 @@
 <template>
   <div>
-    home组件
+    <el-button type="info" @click="logout">退出</el-button>
   </div>
 </template>
 
@@ -10,7 +10,15 @@ export default {
     return {
     }
   },
-  name: 'home'
+  name: 'home',
+  methods: {
+    logout () {
+      // 清空token
+      window.sessionStorage.clear()
+      // 跳转到登录页面
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 
